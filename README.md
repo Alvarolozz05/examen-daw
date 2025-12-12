@@ -33,5 +33,14 @@
 ### Deploy_Moodle_Frontend
 ![Deploy_Moodle_Frontend](images/deploy_moodle_frontend.png)
 
+### Pagina Principal
+![Pagina Principal](images/pagina_principal.png)
+
 ### Certificado
 ![Certificado](images/certificado.png)
+
+### Login
+![Login](images/login.png)
+
+### Dashboard Moodle
+![Dashboard Moodle](images/dashboard_moodle.png)
