@@ -5,28 +5,42 @@ set -ex
 source .env
 
 # Eliminamos descargas previas de Moodle CLI
-rm -f /tmp/moodle-4.5.0.zip
+rm -f /tmp/v4.5.0.zip
 
 # Descargamos Moodle CLI
-wget https://github.com/moodle/moodle/archive/refs/tags/v4.5.0.zip -P /tmp
+wget https://github.com/moodle/moodle/archive/refs/tags/v4.5.0.zip -O /tmp/v4.5.0.zip
 
 # Instalamos unzip
 apt install unzip
 
-# Le damos permisos de ejecución
-chmod +x /tmp/moodle-4.5.0.zip
+# Eliminamos instalaciones previas de Moodle
+rm -rf /tmp/moodle-4.5.0
 
 # Descomprimos el archivo zip en el directorio raiz del servidor web
-unzip /tmp/moodle-4.5.0.zip -d /var/www/html/
+unzip /tmp/v4.5.0.zip -d /tmp
 
 # Eliminamos instalaciones previas de Moodle
 rm -rf /var/www/html/*
+
+# Movemos los archivos descomprimidos al directorio raiz del servidor web
+mv /tmp/moodle-4.5.0/* /var/www/html/
 
 # Creamos el directorio moodledata
 mkdir -p /var/www/moodledata/
 
 # Modificamos el propietario y el grupo de /var/www/moodledata a www-data
 chown -R www-data:www-data /var/www/moodledata
+
+# Damos permisos de escritura/lectura al propietario y grupo
+chmod -R 770 /var/www/moodledata
+
+# Aseguramos que todo /var/www/html pertenece a www-data y tiene permisos correctos
+chown -R www-data:www-data /var/www/html
+chmod -R 775 /var/www/html
+
+# Aseguramos que moodledata tiene permisos correctos
+chown -R www-data:www-data /var/www/moodledata
+chmod -R 775 /var/www/moodledata
 
 # Instalamos Moodle usando CLI
 sudo -u www-data php /var/www/html/admin/cli/install.php \
@@ -51,7 +65,7 @@ sudo -u www-data php /var/www/html/admin/cli/install.php \
 sudo -u www-data php /var/www/html/admin/cli/set_config.php --name=loginurl --value="$URL_HIDE_LOGIN"
 
 # Copiamos el archivo htaccess para reescritura de endpoints
-cp .../htaccess/.htaccess /var/www/html/.htaccess
+cp ../htaccess/.htaccess /var/www/html/.htaccess
 
 # Modificamos el propietario y el grupo de /var/www/html a www-data
 chown -R www-data:www-data /var/www/html
