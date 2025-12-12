@@ -16,10 +16,6 @@ apt install apache2 -y
 # Instalamos PHP y todos los paquetes y extensiones necesarias
 apt install -y php libapache2-mod-php php-mysql php-xml php-mbstring php-curl php-zip php-gd php-intl php-soap
 
-# Modificamos el parametro max_input_vars en php.ini
-sed -i "s/;max_input_vars = 1000/max_input_vars = 5000/" /etc/php/8.*/apache2/php.ini
-sed -i "s/;max_input_vars = 1000/max_input_vars = 5000/" /etc/php/8.*/cli/php.ini
-
 # Copiamos el archivo de configuracion de apache
 cp ../conf/000-default.conf /etc/apache2/sites-available
 

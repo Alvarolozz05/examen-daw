@@ -4,11 +4,15 @@ set -ex
 # Cargamos las variables de entorno
 source .env
 
+# Modificamos el parametro max_input_vars en php.ini
+sed -i "s/;max_input_vars = 1000/max_input_vars = 5000/" /etc/php/8.*/apache2/php.ini
+sed -i "s/;max_input_vars = 1000/max_input_vars = 5000/" /etc/php/8.*/cli/php.ini
+
 # Eliminamos descargas previas de Moodle CLI
 rm -f /tmp/v4.5.0.zip
 
 # Descargamos Moodle CLI
-wget https://github.com/moodle/moodle/archive/refs/tags/v4.5.0.zip -O /tmp/v4.5.0.zip
+wget https://github.com/moodle/moodle/archive/refs/tags/v4.5.0.zip -P /tmp
 
 # Instalamos unzip
 apt install unzip
@@ -30,17 +34,6 @@ mkdir -p /var/www/moodledata/
 
 # Modificamos el propietario y el grupo de /var/www/moodledata a www-data
 chown -R www-data:www-data /var/www/moodledata
-
-# Damos permisos de escritura/lectura al propietario y grupo
-chmod -R 770 /var/www/moodledata
-
-# Aseguramos que todo /var/www/html pertenece a www-data y tiene permisos correctos
-chown -R www-data:www-data /var/www/html
-chmod -R 775 /var/www/html
-
-# Aseguramos que moodledata tiene permisos correctos
-chown -R www-data:www-data /var/www/moodledata
-chmod -R 775 /var/www/moodledata
 
 # Instalamos Moodle usando CLI
 sudo -u www-data php /var/www/html/admin/cli/install.php \
